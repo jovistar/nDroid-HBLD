@@ -3,10 +3,12 @@
 import math
 
 class Hbld():
-	def __init__(self, m):
+	def __init__(self, m, c):
 		self.header = 0
 		self.slices = []
 		self.m = m
+		self.c = c
+		self.conflictNum = 0
 
 	def add_slice(self):
 		newSlice = []
@@ -24,9 +26,12 @@ class Hbld():
 		if self.header == 0:
 			self.add_slice()
 		
-		total = self.slices[-1][1]
-		used = self.slices[-1][0]
-		if ( used / total ) > 0.5:
+		total = float(self.slices[-1][1])
+		used = float(self.slices[-1][0])
+		if ( used / total ) >= float(0.5):
+			self.add_slice()
+		if self.conflictNum > self.c:
+			self.conflictNum = 0
 			self.add_slice()
 
 	def get_size(self):
@@ -61,13 +66,14 @@ class Hbld():
 			unitOffset = self.get_unit_offset(val)
 
 			if not self.get_bit(self.slices[-1][unitNo], unitOffset):
-				self.slices[-1][0] = self.slices[-1][0] + 1
 				self.slices[-1][unitNo] = self.set_bit(self.slices[-1][unitNo], unitOffset)
+				self.slices[-1][0] = self.slices[-1][0] + 1
+			else:
+				self.conflictNum = self.conflictNum + 1
 
 	def query_item(self, vals):
-		setNum = len(vals)
-		
 		for i in range(0, len(self.slices)):
+			setNum = len(vals)
 			for val in vals:
 				val = val % self.m
 

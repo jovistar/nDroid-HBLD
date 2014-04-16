@@ -4,11 +4,14 @@ import hashlib
 import os
 
 def gen_md5_file(path):
-	m = hashlib.md5()
-	fileHandle = open(path, 'rb')
-	m.update(fileHandle.read())
-	fileHandle.close()
-	return m.hexdigest()
+	#m = hashlib.md5()
+	#fileHandle = open(path, 'rb')
+	#m.update(fileHandle.read())
+	#fileHandle.close()
+	#return m.hexdigest()
+	items = path.split('/', 1)
+	result = items[1].split('.', 1)
+	return result[0]
 
 def gen_md5_str(strVal):
 	m = hashlib.md5()

@@ -3,9 +3,10 @@
 import os
 
 class Statd():
-	def __init__(self, m , k):
+	def __init__(self, m , k, c):
 		self.m = m
 		self.k = k
+		self.c = c
 		self.ts = 0
 		self.ms = 0
 		self.bs = 0
@@ -51,6 +52,7 @@ class Statd():
 	def print_result(self):
 		print 'm:   %d' % self.m
 		print 'k:   %d' % self.k
+		print 'c:   %d' % self.c
 		print 'ts:  %d' % self.ts
 		print 'ms:  %d' % self.ms
 		print 'bs:  %d' % self.bs
@@ -64,6 +66,6 @@ class Statd():
 	def write_result(self):
 		fileHandle = open('result.txt', 'a+')
 
-		fileHandle.write('%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n' % (self.m, self.k, self.ts, self.ms, self.bs, self.p, self.n, self.tp, self.fp, self.tn, self.fn))
+		fileHandle.write('%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n' % (self.m, self.k, self.c, self.ts, self.ms, self.bs, self.p, self.n, self.tp, self.fp, self.tn, self.fn))
 		
 		fileHandle.close()

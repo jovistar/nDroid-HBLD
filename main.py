@@ -20,10 +20,9 @@ def get_apk_list(apkDir):
 
 def insert_apk_item(hbld, apkList, stat, flag, m, k):
 	for apk in apkList:
-		print 'Inserting %s' % apk
+		#print 'Inserting %s' % apk
 		md5Val = util.gen_md5_file(apk)
 		vals = get_hash_val(md5Val, m, k)
-		print vals
 		hbld.insert_item(vals)
 
 	if flag == 'p':
@@ -33,7 +32,7 @@ def insert_apk_item(hbld, apkList, stat, flag, m, k):
 
 def query_apk_item(hbld, mApkList, bApkList, stat, flag, m, k):
 	for apk in mApkList:
-		print 'Querying %s' % apk
+		#print 'Querying %s' % apk
 		md5Val = util.gen_md5_file(apk)
 		vals = get_hash_val(md5Val, m, k)
 		result = hbld.query_item(vals)
@@ -45,7 +44,7 @@ def query_apk_item(hbld, mApkList, bApkList, stat, flag, m, k):
 				stat.inc_fn()
 
 	for apk in bApkList:
-		print 'Querying %s' % apk
+		#print 'Querying %s' % apk
 		md5Val = util.gen_md5_file(apk)
 		vals = get_hash_val(md5Val, m, k)
 		result = hbld.query_item(vals)
@@ -66,7 +65,8 @@ def get_hash_val(md5Val, m, k):
 	stop = 32 / k
 
 	for i in range(0, k):
-		hashVal = util.cal_md5_val(util.gen_md5_str(md5Val[start:stop]))
+		hashVal = util.cal_md5_val(util.gen_md5_str(md5Val[start:stop] + '%d' % i))
+		#hashVal = util.cal_md5_val(util.gen_md5_str(md5Val + '%d' % i))
 		hashVals.append(hashVal % m)
 		start = stop
 		stop = stop + 32 / k
@@ -74,11 +74,11 @@ def get_hash_val(md5Val, m, k):
 	return hashVals
 
 
-def main_loop(m, k):
-	mHbld = Hbld(m)
-	bHbld = Hbld(m)
+def main_loop(m, k, c):
+	mHbld = Hbld(m, c)
+	bHbld = Hbld(m, c)
 
-	stat = Statd(m, k)
+	stat = Statd(m, k, c)
 
 	mApkList = get_apk_list('mal')
 	stat.set_p(len(mApkList))
@@ -95,16 +95,19 @@ def main_loop(m, k):
 	stat.print_result()
 
 if __name__ == '__main__':
-	opts, args = getopt.getopt(sys.argv[1:], 'm:k:')
+	opts, args = getopt.getopt(sys.argv[1:], 'm:k:c:')
 
 	m = 4096
 	k = 4
+	c = 100
 
 	for opt, arg in opts:
 		if opt in ('-m'):
 			m = int(arg)
 		if opt in ('-k'):
 			k = int(arg)
+		if opt in ('-c'):
+			c = int(arg)
 
-	main_loop(m, k)
+	main_loop(m, k, c)
 
